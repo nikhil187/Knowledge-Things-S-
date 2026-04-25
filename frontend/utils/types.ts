@@ -1,0 +1,152 @@
+export type Difficulty = 1 | 2 | 3 | 4 | 5;
+
+export type Subject =
+  | "Math"
+  | "Science"
+  | "English"
+  | "History"
+  | "Geography"
+  | "General Knowledge";
+
+export type Grade = 3 | 4 | 5;
+
+export type Topic = string;
+
+export type RoomStatus =
+  | "waiting"
+  | "playing"
+  | "session_summary"
+  | "replay";
+
+export type GameMode = "casual" | "serious";
+
+export type PowerUpType = "team_shield" | "time_boost" | "bonus_round";
+
+export interface PowerUpSlot {
+  available: boolean;
+  used: boolean;
+}
+
+export interface PowerUpState {
+  team_shield: PowerUpSlot;
+  time_boost: PowerUpSlot;
+  bonus_round: PowerUpSlot;
+}
+
+export interface ActiveEffects {
+  shieldRemovedOptions?: string[];
+  timeBonusApplied?: boolean;
+  bonusRoundActive?: boolean;
+}
+
+export interface Player {
+  id: string;
+  name: string;
+  username?: string;
+  isBot: boolean;
+  isCorrect: boolean;
+  wrongAnswers: string[];
+  attempts: number;
+  answer?: number | string;
+  joinedAt: number;
+  answeredAt?: number;
+  correctCount: number;
+  questionsParticipated: number;
+  contributionCount: number;
+  helpedCount: number;
+  avatar?: string;
+}
+
+export interface MathProblem {
+  id: string;
+  question: string;
+  correctAnswer: number | string;
+  difficulty: Difficulty;
+  type: string;
+  operands?: number[];
+  options?: string[];
+}
+
+export interface SessionBadges {
+  starTeam: boolean;
+  helpingHand: boolean;
+  fullHouse: boolean;
+  teamOnFire: boolean;
+  perfectTeam: boolean;
+  everyoneContributed: boolean;
+  comebackTeam: boolean;
+  helpingHeroes: boolean;
+}
+
+export interface ProblemHistoryEntry {
+  problem: MathProblem;
+  correct: boolean;
+  allPlayersCorrect?: boolean;
+  averageResponseMs?: number;
+}
+
+export interface RoomState {
+  roomId: string;
+  players: Player[];
+  currentLevel: Difficulty;
+  teamScore: number;
+  teamStars: number;
+  hintsUsed: number;
+  groupCode?: string;
+  gameMode: GameMode;
+  currentProblem: MathProblem | null;
+  status: RoomStatus;
+  problemsSolved: number;
+  subject: Subject;
+  topic: Topic;
+  grade: Grade;
+  timerSeconds?: number;
+  questionStartTime?: number;
+  round: number;
+  questionsTotal?: number;
+  questionsRemaining?: number;
+  teamAccuracy: number;
+  encouragement: string;
+  sessionBadges?: SessionBadges;
+  totalStars?: number;
+  nextMilestone?: number;
+  gameStageLevel?: number;
+  teamStreak?: number;
+  teamComboLevel?: number;
+  bestTeamStreak?: number;
+  powerUps?: PowerUpState;
+  activeEffects?: ActiveEffects;
+  problemHistory?: ProblemHistoryEntry[];
+  questionSource?: "ai" | "backup" | "local";
+}
+
+export interface AnswerResult {
+  correct: boolean;
+  hint?: string;
+  explanation?: string;
+  teamStreakNow?: number;
+  teamComboLevel?: number;
+  allCorrect?: boolean;
+  teamBonusAwarded?: number;
+}
+
+export interface ReplayItem {
+  problem: MathProblem;
+  correct: boolean;
+}
+
+export type AchievementId =
+  | "speed_learner"
+  | "quiz_explorer"
+  | "practice_makes_perfect"
+  | "knowledge_seeker"
+  | "subject_master"
+  | "team_spirit"
+  | "helping_hand_pro"
+  | "perfect_session"
+  | "streak_legend"
+  | "comeback_champion"
+  | "badge_collector"
+  | "first_steps"
+  | "dedicated_learner"
+  | "all_rounder";

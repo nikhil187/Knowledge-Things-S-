@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+.next/
+dist/
+out/
+
+# Environment & secrets
+.env
+.env.local
+.env.*.local
+*-firebase-adminsdk-*.json
+*service-account*.json
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backend data (runtime state, not source)
+backend/data/
+
+# Test artifacts
+coverage/
+*.lcov
+playwright-report/
+test-results/
+frontend/tsconfig.tsbuildinfo

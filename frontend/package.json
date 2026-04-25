@@ -1,0 +1,36 @@
+{
+  "name": "knowledge-things-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "e2e": "playwright test",
+    "e2e:ui": "playwright test --ui",
+    "e2e:report": "playwright test && echo '\n---\nAI: Read e2e-report.md in this directory for full analysis'"
+  },
+  "dependencies": {
+    "@types/qrcode": "^1.5.6",
+    "canvas-confetti": "^1.9.4",
+    "framer-motion": "^10.16.16",
+    "next": "14.2.18",
+    "qrcode": "^1.5.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "socket.io-client": "^4.7.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0",
+    "@types/canvas-confetti": "^1.9.0",
+    "@types/node": "^20.10.0",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
+    "autoprefixer": "^10.4.16",
+    "canvas": "^3.2.3",
+    "postcss": "^8.4.32",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.3.2"
+  }
+}
