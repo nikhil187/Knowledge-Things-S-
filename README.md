@@ -2,6 +2,7 @@
 
 > A cooperative real-time multiplayer quiz game for kids in Grades 3–5, powered by AI-generated questions and built with Next.js + Socket.io.
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-knowledgethings.vercel.app-6366f1?style=flat&logo=vercel&logoColor=white)](https://knowledgethings.vercel.app/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js_14-black?style=flat&logo=next.js)](https://nextjs.org/)
 [![Socket.io](https://img.shields.io/badge/Socket.io-010101?style=flat&logo=socket.io)](https://socket.io/)
@@ -10,16 +11,19 @@
 [![Jest](https://img.shields.io/badge/Jest-C21325?style=flat&logo=jest&logoColor=white)](https://jestjs.io/)
 [![Playwright](https://img.shields.io/badge/Playwright-2EAD33?style=flat&logo=playwright&logoColor=white)](https://playwright.dev/)
 
+**[knowledgethings.vercel.app](https://knowledgethings.vercel.app/) — try it live**
+
 ---
 
 ## Overview
 
 Knowledge Things lets 1–4 players share a room code, pick a subject and grade level, then race through AI-generated questions together. Points are earned as a team — every correct answer counts for everyone.
 
-| | |
+| Home & Lobby | Game Screen |
 |---|---|
-| ![Home screen – new game](docs/screenshots/screen1-home-newgame.png) | ![Topic & grade selection](docs/screenshots/screen4-topic-grade.png) |
-| ![Join screen](docs/screenshots/screen3-join-game.png) | ![Enter nickname](docs/screenshots/screen5-enter-name.png) |
+| ![Home screen](docs/screenshots/screen-home.png) | ![Game screen](docs/screenshots/screen-game.png) |
+
+![Profile & Achievements](docs/screenshots/screen-profile.png)
 
 ---
 
