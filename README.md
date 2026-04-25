@@ -53,20 +53,6 @@ Knowledge Things lets 1–4 players share a room code, pick a subject and grade 
 
 ## Architecture
 
-```
-┌─────────────────────────────────────────────────────┐
-│                    Browser (Next.js)                 │
-│  page.tsx → GameContext → useSocket (Socket.io-client)│
-└────────────────────────┬────────────────────────────┘
-                         │ WebSocket (Socket.io)
-┌────────────────────────▼────────────────────────────┐
-│                  Backend (Express)                   │
-│  socket/handlers.ts ──► game/engine.ts              │
-│  services/openaiService.ts (DeepSeek / fallback)    │
-│  store/progressStore.ts + userProgressStore.ts      │
-└─────────────────────────────────────────────────────┘
-```
-
 ![Architecture diagram](docs/architecture-diagram.png)
 
 ### Key design decisions
