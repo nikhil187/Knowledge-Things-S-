@@ -1,6 +1,6 @@
 # Knowledge Things
 
-> A cooperative real-time multiplayer quiz game for kids in Grades 3–5, powered by AI-generated questions and built with Next.js + Socket.io.
+A cooperative multiplayer quiz game for kids in Grades 3-5. Pick a subject, share a room code, and answer AI-generated questions as a team.
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-knowledgethings.vercel.app-6366f1?style=flat&logo=vercel&logoColor=white)](https://knowledgethings.vercel.app/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -11,62 +11,45 @@
 [![Jest](https://img.shields.io/badge/Jest-C21325?style=flat&logo=jest&logoColor=white)](https://jestjs.io/)
 [![Playwright](https://img.shields.io/badge/Playwright-2EAD33?style=flat&logo=playwright&logoColor=white)](https://playwright.dev/)
 
-**[knowledgethings.vercel.app](https://knowledgethings.vercel.app/) — try it live**
+**[knowledgethings.vercel.app](https://knowledgethings.vercel.app/)**
 
 ---
 
-## Overview
+## Screenshots
 
-Knowledge Things lets 1–4 players share a room code, pick a subject and grade level, then race through AI-generated questions together. Points are earned as a team — every correct answer counts for everyone.
-
-| Home & Lobby | Game Screen |
+| Home | Game Room Setup |
 |---|---|
-| ![Home screen](docs/screenshots/screen-home.png) | ![Game screen](docs/screenshots/screen-game.png) |
+| ![Home](docs/screenshots/screen-home.png) | ![Waiting Room](docs/screenshots/screen-waiting.png) |
 
-![Profile & Achievements](docs/screenshots/screen-profile.png)
+![In-game question](docs/screenshots/screen-game.png)
 
 ---
 
-## Features
+## What it does
 
-**Gameplay**
+Up to 4 players join a room using a short code, choose a subject and topic, then answer questions together. Everyone shares the same score. Questions are pulled from the DeepSeek AI API and adapt to how well the team is doing.
+
 - 6 subjects: Math, Science, English, History, Geography, General Knowledge
-- AI-generated questions via DeepSeek API (local fallback if API is unavailable)
-- Adaptive difficulty — 3 consecutive correct answers → harder; 2 wrong → easier
-- 30-second server-side timer per question with auto-advance
-- Two modes: **Standard** (saves progress) and **Learn Slowly** (hints, no save)
-
-**Multiplayer**
-- Create a room → share a 4-character code → others join instantly
-- Up to 4 players, synchronized in real time via Socket.io
-- Cooperative team score, individual streaks, and power-ups
-
-**Progression & Rewards**
-- Per-user profiles stored locally (no login required — device token only)
-- 14 lifetime achievements + 8 per-session badges
-- 3 power-ups earned through gameplay (Skip, Shield, Double Points)
-- Level system per subject (Levels 1–10), unlocked by earning 4+ stars
-
-**Accessibility & UX**
-- Designed for ages 8–11: large touch targets, friendly language
-- `prefers-reduced-motion` respected throughout
-- PWA-ready (installable on mobile, works offline for static assets)
-- Framer Motion animations with graceful degradation
+- Adaptive difficulty: 3 correct in a row makes questions harder, 2 wrong makes them easier
+- 30-second timer per question, server-enforced
+- Two modes: **Standard** (tracks progress and level) and **Learn Slowly** (shows hints, no saving)
+- Streaks, power-ups, badges, and a level system per subject to keep kids coming back
+- No login needed. Profiles are tied to the device so kids can just pick a nickname and go.
 
 ---
 
 ## Architecture
 
-![Architecture diagram](docs/architecture-diagram.png)
+![Architecture](docs/architecture-diagram.png)
 
-### Key design decisions
+All game logic runs in `engine.ts` on the backend. The socket handlers in `handlers.ts` only move data in and out. This keeps the game state predictable and easy to test.
 
-| Decision | Rationale |
-|----------|-----------|
-| All game state lives in `engine.ts` | Handlers are pure I/O — prevents split-brain bugs across socket events |
-| No database | JSON file persistence is sufficient for a cooperative session game; simplifies deployment |
-| One AI call per game | Batch-fetch all questions upfront, serve from memory — no per-question latency |
-| Device token auth | Kids don't have email addresses; persistent profiles without login friction |
+| Decision | Why |
+|----------|-----|
+| All state in `engine.ts` | Handlers stay thin, no split-brain bugs across socket events |
+| No database | JSON file persistence is enough for a session game, keeps deployment simple |
+| One AI call per game | Fetch all questions upfront and serve from memory, no per-question delay |
+| Device token auth | Kids don't have email addresses, so login would just be friction |
 
 ---
 
@@ -76,125 +59,113 @@ Knowledge Things lets 1–4 players share a room code, pick a subject and grade 
 |-------|------------|
 | Frontend | Next.js 14 (App Router), TypeScript, Tailwind CSS, Framer Motion |
 | Backend | Node.js, Express, Socket.io, TypeScript |
-| AI | DeepSeek API (OpenAI-compatible) with local fallback |
-| Testing | Jest (unit), Playwright (E2E) |
-| State | In-memory rooms + JSON file persistence |
+| AI | DeepSeek API with local question fallback |
+| Testing | Jest (unit tests), Playwright (end-to-end) |
+| State | In-memory rooms with JSON file persistence |
 
 ---
 
-## Getting Started
+## Running locally
 
 ### Prerequisites
 
 - Node.js 18+
 - npm 9+
 
-### Install dependencies
+### Install
 
 ```bash
-# Backend
 cd backend && npm install
-
-# Frontend
 cd frontend && npm install
 ```
 
-### Environment variables
+### Environment setup
 
-**Backend** — copy `backend/.env.example` to `backend/.env`:
+Copy `backend/.env.example` to `backend/.env`. The only variable is `DEEPSEEK_API_KEY`, which is optional. If you leave it blank the app falls back to local questions.
 
-```
-DEEPSEEK_API_KEY=   # Optional. Omit to use local fallback questions.
-```
+The frontend needs no environment changes for local dev.
 
-**Frontend** — copy `frontend/.env.example` to `frontend/.env.local` (no changes needed for local dev).
-
-### Run locally
+### Start
 
 ```bash
-# Terminal 1 — Backend (port 3001)
+# Terminal 1
 cd backend && npm run dev
 
-# Terminal 2 — Frontend (port 3000)
+# Terminal 2
 cd frontend && npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). Create a game, share the room code, and join from another browser tab or device.
+Open [http://localhost:3000](http://localhost:3000). To test multiplayer, open a second browser tab and join with the room code.
 
 ---
 
-## Testing
+## Tests
 
-### Backend unit tests (Jest)
+### Unit tests
 
 ```bash
 cd backend
 npm test
-npm run test:coverage   # with coverage report
+npm run test:coverage
 ```
 
-Covers: game engine scoring, difficulty adaptation, badge logic, question generation fallback, progress persistence.
+Covers scoring, difficulty adaptation, badge logic, question generation, and progress persistence.
 
-### End-to-end tests (Playwright)
+### End-to-end tests
 
-With both servers running:
+Both servers need to be running first.
 
 ```bash
 cd frontend
-npx playwright install   # one-time browser setup
-npm run e2e              # headless
-npm run e2e:ui           # interactive mode
-```
-
-E2E suite covers: create room → join → start game → answer question flow.
-
----
-
-## Project Structure
-
-```
-knowledge-things/
-├── backend/
-│   ├── src/
-│   │   ├── config/constants.ts       # Tuneable game constants
-│   │   ├── game/
-│   │   │   ├── engine.ts             # Scoring, validation, level progression
-│   │   │   ├── achievements.ts       # Lifetime achievement logic
-│   │   │   └── badges.ts             # Per-session badge logic
-│   │   ├── services/
-│   │   │   ├── openaiService.ts      # DeepSeek API + local fallback
-│   │   │   └── questionPoolService.ts
-│   │   ├── socket/
-│   │   │   ├── handlers.ts           # All Socket.io event handlers
-│   │   │   └── middleware.ts         # Origin check + rate limiting
-│   │   ├── store/
-│   │   │   ├── progressStore.ts      # Group progress → JSON
-│   │   │   └── profileStore.ts       # Per-user profiles → JSON
-│   │   ├── routes/rooms.ts           # REST: room-exists check
-│   │   ├── index.ts                  # Server entry point
-│   │   └── types.ts                  # Shared TypeScript types
-│   └── tests/                        # Jest test suites
-│
-└── frontend/
-    ├── app/
-    │   ├── page.tsx                  # Home: subject + topic wizard
-    │   ├── room/[roomId]/page.tsx    # Main game page
-    │   ├── profile/page.tsx          # User profile + achievements
-    │   └── context/GameContext.tsx   # Global game state
-    ├── components/                   # GameScreen, WaitingRoom, SessionSummary, …
-    ├── hooks/useSocket.ts            # Socket.io connection layer
-    ├── utils/                        # Subjects, types, API client, achievements
-    └── e2e/                          # Playwright tests
+npx playwright install   # first time only
+npm run e2e
+npm run e2e:ui           # opens the interactive Playwright UI
 ```
 
 ---
 
-## Game Logic Highlights
+## Project structure
 
-- **Questions per game:** `min(14, max(5, 4 + gameLevel))` — scales with player skill
-- **Scoring:** 10 pts correct + streak bonuses (20 / 30 / 50 pts) + all-correct bonus (25 pts) + speed bonus (15 pts if all answer in < 15 s)
-- **Stars:** `round(teamScore / maxPossible × 5)` — 0–5 stars per session
-- **Level up:** 4+ stars in Standard mode advances subject level (max 10)
+```
+backend/
+  src/
+    config/constants.ts        game constants (timers, scoring, thresholds)
+    game/engine.ts             core game logic: scoring, questions, level progression
+    game/achievements.ts       lifetime achievement rules
+    game/badges.ts             per-session badge rules
+    services/openaiService.ts  DeepSeek API client + local fallback
+    socket/handlers.ts         all Socket.io event handlers
+    socket/middleware.ts       origin check and rate limiting
+    store/progressStore.ts     group progress saved to JSON
+    store/profileStore.ts      per-user profiles saved to JSON
+    routes/rooms.ts            REST endpoint: check if a room exists
+    index.ts                   server entry point
+    types.ts                   shared TypeScript types
+  tests/                       Jest test suites
+
+frontend/
+  app/
+    page.tsx                   home page with subject picker
+    room/[roomId]/page.tsx     the actual game page
+    profile/page.tsx           profile, achievements, game history
+    context/GameContext.tsx    global state shared across components
+  components/                  GameScreen, WaitingRoom, SessionSummary, etc.
+  hooks/useSocket.ts           Socket.io connection and event handling
+  utils/                       subjects, types, API client
+  e2e/                         Playwright tests
+```
+
+---
+
+## Scoring
+
+- 10 points per correct answer
+- Streak bonuses: 20 pts at 3x, 30 pts at 5x, 50 pts at 10x
+- All players answer correctly: +25 bonus
+- Everyone answers in under 15 seconds: +15 speed bonus
+- Stars at the end: `round(teamScore / maxPossible * 5)`
+- 4+ stars in Standard mode levels up that subject (max level 10)
+- Questions per game scale with level: `min(14, max(5, 4 + level))`
 
 ---
 
